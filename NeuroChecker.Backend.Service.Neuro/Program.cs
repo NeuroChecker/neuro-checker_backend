@@ -22,6 +22,9 @@ builder.Services.AddDbContext<NeuroContext>(options => options.UseNpgsql(connect
 builder.Services.AddIdentityCore<User>().AddRoles<Role>().AddEntityFrameworkStores<NeuroContext>();
 builder.Services.AddIdentityApiEndpoints<User>();
 
+builder.Services.AddAuthentication();
+builder.Services.AddAuthorization();
+
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
@@ -29,17 +32,53 @@ builder.Services.AddScoped<ILocationRepository, LocationRepository>();
 builder.Services.AddScoped<IUserDataRepository, UserDataRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddCors(options =>
+    {
+        options.AddDefaultPolicy(corsBuilder =>
+        {
+            corsBuilder.WithOrigins("http://localhost:3000")
+                .WithHeaders("Content-Type", "Authorization", "Accept", "Origin", "X-Requested-With",
+                    "X-SignalR-User-Agent")
+                .WithMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .AllowCredentials();
+        });
+    });
+}
+
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<NeuroContext>();
+
+    if (!await context.Database.CanConnectAsync())
+    {
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+        logger.LogError("Database connection failed, check your configuration.");
+
+        return;
+    }
+
+    await context.Database.MigrateAsync();
+}
 
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.MapScalarApiReference();
+
+    app.UseCors();
 }
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+var identityGroup = app.MapGroup("/auth");
+identityGroup.MapIdentityApi<User>();
 
 app.Run();
 
