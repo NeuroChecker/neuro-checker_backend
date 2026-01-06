@@ -1,0 +1,146 @@
+﻿# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio 2022+ generated files
+.vs/
+.vscode/
+.idea/
+
+# Uncomment if you have tasks that create the project's static files
+# wwwroot/
+# node_modules/
+
+# Test results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# NUNIT
+*.VisualState.xml
+TestResult.xml
+nunit-*.xml
+
+# MSTest test Results
+*.trx
+*.Coverage
+*.coveragexml
+
+# Build artifacts and NuGet
+*.obj
+*.exe
+*.dll
+*.pdb
+*.cache
+*.manifest
+*.nuget.props
+*.nuget.targets
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# NuGet packages
+*.nupkg
+# The packages folder can be ignored because of Package Restore
+**/[Pp]ackages/*
+# except build/, which is used as an MSBuild target.
+!**/[Pp]ackages/build/
+# Uncomment if you use NuGet.exe to restore packages instead of MSBuild.
+#!**/[Pp]ackages/repositories.config
+
+# .NET Core build folders
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Publish outputs
+publish/
+App_Data/
+*.Publish.xml
+*.pubxml
+*.publishproj
+
+# Web deploy settings
+*.azurePubxml
+*.pubxml.user
+
+# Other files
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+*.sln.iml
+
+# Backup & reports
+*.bak
+*.Backup
+*.Report.*
+
+# Rider
+.idea/
+*.sln.iml
+
+# VS Code
+.vscode/
+.history/
+*.code-workspace
+
+# JetBrains Rider
+.idea/
+
+# Windows image cache files
+Thumbs.db
+ehthumbs.db
+
+# Others
+desktop.ini
+$RECYCLE.BIN/
+
+# dotenv environment files
+*.env
+*.env.*
+
+# Local secrets
+secrets.json
+appsettings.Development.json
+
+# IIS Express
+/.vs/
+iisexpress/
+
+# Tye
+.tye/
+
+# Docker
+docker-compose.override.yml
+.docker/
+docker-compose*.yml
+
+# Azure Functions
+local.settings.json
+
+# Logs
+*.log
+
+# Mac files
+.DS_Store
