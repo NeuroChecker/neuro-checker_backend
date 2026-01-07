@@ -1,4 +1,7 @@
-﻿# User-specific files
+﻿# TODO - Remove this line (Migrations/) for Production
+Migrations/
+
+# User-specific files
 *.rsuser
 *.suo
 *.user
