@@ -9,6 +9,13 @@ namespace NeuroChecker.Backend.Service.Neuro.Controllers;
 [ApiController, Route("api/identity")]
 public class IdentityController(IIdentityService identityService) : ControllerBase
 {
+    [HttpGet("me"), Authorize]
+    public async Task<IActionResult> GetMe()
+    {
+        var userDto = await identityService.GetMeUserAsync(User);
+        return userDto is null ? Unauthorized() : Ok(userDto);
+    }
+
     [HttpPost("register"), AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
@@ -27,17 +34,5 @@ public class IdentityController(IIdentityService identityService) : ControllerBa
         if (result) return Ok(new { Message = "User logged in successfully." });
 
         return Unauthorized(new { Message = "Invalid email or password." });
-    }
-
-    [HttpGet("me"), Authorize]
-    public async Task<IActionResult> GetMe()
-    {
-        var email = User.Identity?.Name;
-        if (email is null) return Unauthorized(new { Message = "User is not authenticated." });
-
-        var userDto = await identityService.GetMeUserAsync(email);
-        return userDto is null
-            ? StatusCode(500, new { Message = "Failed to retrieve user information." })
-            : Ok(userDto);
     }
 }

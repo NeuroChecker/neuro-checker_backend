@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 using NeuroChecker.Backend.Service.Neuro.Models.Domain;
 using NeuroChecker.Backend.Service.Neuro.Models.DTO.Identity;
 using NeuroChecker.Backend.Service.Neuro.Services.Interfaces;
@@ -11,6 +12,9 @@ public class IdentityService(
     ILogger<IdentityService> logger
 ) : IIdentityService
 {
+    public async Task<User?> GetUserByClaimsPrincipalAsync(ClaimsPrincipal principal)
+        => await userManager.GetUserAsync(principal);
+
     public async Task<bool> RegisterUserAsync(RegisterUserDto dto)
     {
         var user = new User
@@ -68,9 +72,9 @@ public class IdentityService(
         return false;
     }
 
-    public async Task<GetMeUserDto?> GetMeUserAsync(string email)
+    public async Task<GetMeUserDto?> GetMeUserAsync(ClaimsPrincipal principal)
     {
-        var user = await userManager.FindByEmailAsync(email);
+        var user = await GetUserByClaimsPrincipalAsync(principal);
         if (user is null) return null;
 
         return new GetMeUserDto(
