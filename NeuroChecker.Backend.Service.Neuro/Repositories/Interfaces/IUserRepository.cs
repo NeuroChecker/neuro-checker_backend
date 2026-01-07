@@ -1,6 +1,4 @@
-﻿using NeuroChecker.Backend.Service.Neuro.Models.DTO.Acquaintance;
-
-namespace NeuroChecker.Backend.Service.Neuro.Repositories.Interfaces;
+﻿namespace NeuroChecker.Backend.Service.Neuro.Repositories.Interfaces;
 
 public interface IUserRepository
 {

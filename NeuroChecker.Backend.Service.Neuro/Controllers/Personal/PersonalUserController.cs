@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using NeuroChecker.Backend.Service.Neuro.Mapper;
 using NeuroChecker.Backend.Service.Neuro.Models.Request.Identity;
-using NeuroChecker.Backend.Service.Neuro.Models.Request.UserData;
-using NeuroChecker.Backend.Service.Neuro.Repositories.Interfaces;
 using NeuroChecker.Backend.Service.Neuro.Services.Interfaces;
 
 namespace NeuroChecker.Backend.Service.Neuro.Controllers.Personal;
