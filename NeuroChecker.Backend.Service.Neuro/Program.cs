@@ -4,6 +4,8 @@ using NeuroChecker.Backend.Service.Neuro.Models.Domain;
 using NeuroChecker.Backend.Service.Neuro.Options;
 using NeuroChecker.Backend.Service.Neuro.Repositories;
 using NeuroChecker.Backend.Service.Neuro.Repositories.Interfaces;
+using NeuroChecker.Backend.Service.Neuro.Services;
+using NeuroChecker.Backend.Service.Neuro.Services.Interfaces;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,6 +33,8 @@ builder.Services.AddOpenApi();
 builder.Services.AddScoped<ILocationRepository, LocationRepository>();
 builder.Services.AddScoped<IUserDataRepository, UserDataRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.AddScoped<IIdentityService, IdentityService>();
 
 if (builder.Environment.IsDevelopment())
 {
@@ -77,6 +81,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+// TODO - Remove these default identity endpoints in favor of custom ones
 var identityGroup = app.MapGroup("/auth");
 identityGroup.MapIdentityApi<User>();
 
