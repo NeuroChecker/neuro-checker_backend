@@ -90,4 +90,33 @@ public class IdentityService(
             user.LightDeviation
         );
     }
+
+    public async Task<bool> UpdateUserThresholdsAsync(ClaimsPrincipal principal, UpdateUserThresholdsDto dto)
+    {
+        var user = await GetUserByClaimsPrincipalAsync(principal);
+        if (user is null) return false;
+
+        user.HeartbeatLimit = dto.HeartbeatLimit;
+        user.HeartbeatDeviation = dto.HeartbeatDeviation;
+
+        user.SoundLimit = dto.SoundLimit;
+        user.SoundDeviation = dto.SoundDeviation;
+
+        user.BloodLimit = dto.BloodLimit;
+        user.BloodDeviation = dto.BloodDeviation;
+
+        user.LightLimit = dto.LightLimit;
+        user.LightDeviation = dto.LightDeviation;
+
+        var result = await userManager.UpdateAsync(user);
+        if (result.Succeeded) return true;
+
+        logger.LogWarning(
+            "User {Email} thresholds update failed: {Errors}",
+            user.Email,
+            string.Join(", ", result.Errors.Select(e => e.Description))
+        );
+
+        return false;
+    }
 }

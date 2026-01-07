@@ -13,4 +13,6 @@ public interface IIdentityService
     Task<bool> LoginUserAsync(LoginUserDto dto);
 
     Task<GetMeUserDto?> GetMeUserAsync(ClaimsPrincipal principal);
+    
+    Task<bool> UpdateUserThresholdsAsync(ClaimsPrincipal principal, UpdateUserThresholdsDto dto);
 }
