@@ -28,6 +28,13 @@ builder.Services.AddIdentityApiEndpoints<User>();
 
 builder.Services.AddAuthentication();
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+});
+
 builder.Services.AddAuthorization(options =>
 {
     var tree = PermissionTreeBuilder.BuildTree(typeof(Permissions));
