@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NeuroChecker.Backend.Service.Neuro.Mapper;
 using NeuroChecker.Backend.Service.Neuro.Models.Request.Acquaintance;
 using NeuroChecker.Backend.Service.Neuro.Repositories.Interfaces;
 using NeuroChecker.Backend.Service.Neuro.Services.Interfaces;
@@ -13,6 +14,16 @@ public class PersonalAcquaintanceController(
     IIdentityService identityService
 ) : ControllerBase
 {
+    [HttpPut, Authorize(Permissions.Personal.Acquaintance.Read)]
+    public async Task<IActionResult> GetAcquaintancesAsync()
+    {
+        var user = await identityService.GetUserByClaimsPrincipalAsync(User);
+        if (user is null) return Unauthorized();
+
+        var acquaintances = await userRepository.GetAcquaintancesAsync(user.Id);
+        return Ok(acquaintances.ConvertAll(AcquaintanceMapper.ToGetResponse));
+    }
+
     [HttpPut, Authorize(Permissions.Personal.Acquaintance.Link)]
     public async Task<IActionResult> LinkAcquaintanceAsync([FromBody] LinkAcquaintanceRequest request)
     {
