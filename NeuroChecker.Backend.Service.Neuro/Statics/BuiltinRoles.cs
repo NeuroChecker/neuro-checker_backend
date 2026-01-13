@@ -16,6 +16,7 @@ public static class BuiltinRoles
         Name = "User",
         Permissions =
         [
+            Permissions.Personal.Acquaintance.Read,
             Permissions.Personal.Acquaintance.Link,
             Permissions.Personal.Acquaintance.Unlink,
 

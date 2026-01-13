@@ -14,7 +14,7 @@ public class PersonalAcquaintanceController(
     IIdentityService identityService
 ) : ControllerBase
 {
-    [HttpPut, Authorize(Permissions.Personal.Acquaintance.Read)]
+    [HttpGet, Authorize(Permissions.Personal.Acquaintance.Read)]
     public async Task<IActionResult> GetAcquaintancesAsync()
     {
         var user = await identityService.GetUserByClaimsPrincipalAsync(User);
