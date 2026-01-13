@@ -35,4 +35,13 @@ public class IdentityController(IIdentityService identityService) : ControllerBa
 
         return Unauthorized(new { Message = "Invalid email or password." });
     }
+
+    [HttpDelete("logout"), Authorize]
+    public async Task<IActionResult> Logout()
+    {
+        var result = await identityService.LogoutUserAsync(User);
+        if (result) return Ok(new { Message = "User logged out successfully." });
+
+        return BadRequest(new { Message = "User logout failed." });
+    }
 }

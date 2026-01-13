@@ -87,6 +87,15 @@ public class IdentityService(
         return false;
     }
 
+    public async Task<bool> LogoutUserAsync(ClaimsPrincipal principal)
+    {
+        var user = await GetUserByClaimsPrincipalAsync(principal);
+        if (user is null) return false;
+
+        await signInManager.SignOutAsync();
+        return true;
+    }
+
     public async Task<GetMeUserDto?> GetMeUserAsync(ClaimsPrincipal principal)
     {
         var user = await GetUserByClaimsPrincipalAsync(principal);
