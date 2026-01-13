@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using NeuroChecker.Backend.Identity.Permission;
 using NeuroChecker.Backend.Service.Neuro.Data;
 using NeuroChecker.Backend.Service.Neuro.Models.Domain;
 using NeuroChecker.Backend.Service.Neuro.Options;
@@ -6,6 +7,7 @@ using NeuroChecker.Backend.Service.Neuro.Repositories;
 using NeuroChecker.Backend.Service.Neuro.Repositories.Interfaces;
 using NeuroChecker.Backend.Service.Neuro.Services;
 using NeuroChecker.Backend.Service.Neuro.Services.Interfaces;
+using NeuroChecker.Backend.Service.Neuro.Statics;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,7 +27,24 @@ builder.Services.AddIdentityCore<User>().AddRoles<Role>().AddEntityFrameworkStor
 builder.Services.AddIdentityApiEndpoints<User>();
 
 builder.Services.AddAuthentication();
-builder.Services.AddAuthorization();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    var tree = PermissionTreeBuilder.BuildTree(typeof(Permissions));
+    var allKeys = PermissionTreeBuilder.FlattenKeys(tree);
+
+    foreach (var key in allKeys)
+    {
+        options.AddPolicy(key, policy => policy.RequireClaim("permission", key));
+    }
+});
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
@@ -34,6 +53,7 @@ builder.Services.AddScoped<ILocationRepository, LocationRepository>();
 builder.Services.AddScoped<IUserDataRepository, UserDataRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
+builder.Services.AddScoped<IDatabaseSetupService, DatabaseSetupService>();
 builder.Services.AddScoped<IIdentityService, IdentityService>();
 
 if (builder.Environment.IsDevelopment())
@@ -55,17 +75,8 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var context = scope.ServiceProvider.GetRequiredService<NeuroContext>();
-
-    if (!await context.Database.CanConnectAsync())
-    {
-        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-        logger.LogError("Database connection failed, check your configuration.");
-
-        return;
-    }
-
-    await context.Database.MigrateAsync();
+    var setupService = scope.ServiceProvider.GetRequiredService<IDatabaseSetupService>();
+    await setupService.EnsureDatabaseSetup();
 }
 
 if (app.Environment.IsDevelopment())

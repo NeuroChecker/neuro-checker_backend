@@ -4,6 +4,7 @@ using NeuroChecker.Backend.Service.Neuro.Mapper;
 using NeuroChecker.Backend.Service.Neuro.Models.Request.UserData;
 using NeuroChecker.Backend.Service.Neuro.Repositories.Interfaces;
 using NeuroChecker.Backend.Service.Neuro.Services.Interfaces;
+using NeuroChecker.Backend.Service.Neuro.Statics;
 
 namespace NeuroChecker.Backend.Service.Neuro.Controllers.Personal;
 
@@ -14,7 +15,7 @@ public class PersonalUserDataController(
     IIdentityService identityService
 ) : ControllerBase
 {
-    [HttpPost]
+    [HttpPost, Authorize(Permissions.Personal.UserData.Create)]
     public async Task<IActionResult> CreateUserDataAsync([FromBody] CreateUserDataRequest request
     )
     {
@@ -29,7 +30,7 @@ public class PersonalUserDataController(
         return Ok(response);
     }
 
-    [HttpGet]
+    [HttpGet, Authorize(Permissions.Personal.UserData.Read)]
     public async Task<IActionResult> GetUserDataAsync()
     {
         var user = await identityService.GetUserByClaimsPrincipalAsync(User);

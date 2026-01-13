@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using NeuroChecker.Backend.Service.Neuro.Models.Domain;
 using NeuroChecker.Backend.Service.Neuro.Models.DTO.Identity;
 using NeuroChecker.Backend.Service.Neuro.Services.Interfaces;
+using NeuroChecker.Backend.Service.Neuro.Statics;
 
 namespace NeuroChecker.Backend.Service.Neuro.Services;
 
@@ -37,15 +38,29 @@ public class IdentityService(
         };
 
         var result = await userManager.CreateAsync(user, dto.Password);
-        if (result.Succeeded) return true;
+        if (!result.Succeeded)
+        {
+            logger.LogWarning(
+                "User {Email} registration failed: {Errors}",
+                dto.Email,
+                string.Join(", ", result.Errors.Select(e => e.Description))
+            );
 
-        logger.LogWarning(
-            "User {Email} registration failed: {Errors}",
-            dto.Email,
-            string.Join(", ", result.Errors.Select(e => e.Description))
-        );
+            return false;
+        }
 
-        return false;
+        var roleResult = await userManager.AddToRoleAsync(user, BuiltinRoles.User.NormalizedName);
+        if (!roleResult.Succeeded)
+        {
+            logger.LogWarning(
+                "Adding user {Email} to role {Role} failed: {Errors}",
+                dto.Email,
+                BuiltinRoles.User.NormalizedName,
+                string.Join(", ", roleResult.Errors.Select(e => e.Description))
+            );
+        }
+
+        return true;
     }
 
     public async Task<bool> LoginUserAsync(LoginUserDto dto)
