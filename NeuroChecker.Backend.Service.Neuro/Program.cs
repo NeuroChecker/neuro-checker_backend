@@ -93,8 +93,8 @@ app.UseAuthorization();
 app.MapControllers();
 
 // TODO - Remove these default identity endpoints in favor of custom ones
-var identityGroup = app.MapGroup("/auth");
-identityGroup.MapIdentityApi<User>();
+// var identityGroup = app.MapGroup("/auth");
+// identityGroup.MapIdentityApi<User>();
 
 app.Run();
 
