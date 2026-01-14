@@ -5,8 +5,7 @@ namespace NeuroChecker.Backend.Service.Neuro.Models.Domain;
 
 public class User : IdentityUser<Guid>
 {
-    [Required, MaxLength(50)]
-    public string Pronouns { get; set; } = null!;
+    [Required, MaxLength(50)] public string Pronouns { get; set; } = null!;
 
     //  [Required] public string Photo { get; set; } = null!; // TODO - implement
 
@@ -21,4 +20,6 @@ public class User : IdentityUser<Guid>
 
     [Required] public double LightLimit { get; set; }
     [Required] public double LightDeviation { get; set; }
+
+    public ICollection<Acquaintance> Acquaintances { get; set; } = new List<Acquaintance>();
 }

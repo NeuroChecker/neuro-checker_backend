@@ -1,11 +1,29 @@
-﻿using NeuroChecker.Backend.Service.Neuro.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using NeuroChecker.Backend.Service.Neuro.Data;
 using NeuroChecker.Backend.Service.Neuro.Models.Domain;
+using NeuroChecker.Backend.Service.Neuro.Models.DTO.Acquaintance;
 using NeuroChecker.Backend.Service.Neuro.Repositories.Interfaces;
 
 namespace NeuroChecker.Backend.Service.Neuro.Repositories;
 
 public class UserRepository(NeuroContext contest) : IUserRepository
 {
+    public async Task<List<GetAcquaintanceDto>> GetAcquaintancesAsync(Guid userId)
+        => await contest.Acquaintances
+            .AsNoTracking()
+            .Where(a => a.UserId == userId)
+            .Join(
+                contest.Users,
+                a => a.AcquaintanceId,
+                u => u.Id,
+                (a, u) => new GetAcquaintanceDto(
+                    u.Id,
+                    u.UserName ?? string.Empty,
+                    u.Pronouns
+                )
+            )
+            .ToListAsync();
+
     public async Task<bool> LinkAcquaintanceAsync(Guid userId, Guid acquaintanceId)
     {
         var user = await contest.Users.FindAsync(userId);

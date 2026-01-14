@@ -6,6 +6,7 @@ public static class Permissions
     {
         public static class Acquaintance
         {
+            public const string Read = "personal.acquaintance.read";
             public const string Link = "personal.acquaintance.link";
             public const string Unlink = "personal.acquaintance.unlink";
         }

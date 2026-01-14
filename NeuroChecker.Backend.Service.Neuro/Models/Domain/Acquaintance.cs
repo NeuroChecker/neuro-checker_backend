@@ -6,5 +6,7 @@ namespace NeuroChecker.Backend.Service.Neuro.Models.Domain;
 public class Acquaintance
 {
     public Guid UserId { get; init; }
+
     public Guid AcquaintanceId { get; init; }
+    public User AcquaintanceUser { get; init; } = null!;
 }
