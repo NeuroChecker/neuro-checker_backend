@@ -7,10 +7,7 @@ public class UserData
     public Guid Id { get; init; }
 
     [Required] public Guid UserId { get; init; }
-    public User User { get; init; } = null!;
-
     [Required] public Guid LocationId { get; init; }
-    public Location Location { get; init; } = null!;
 
     [Required] public double Heartbeat { get; init; }
     [Required] public double SoundIntensity { get; init; }
