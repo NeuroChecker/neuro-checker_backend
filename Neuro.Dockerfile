@@ -2,8 +2,8 @@
 USER $APP_UID
 
 WORKDIR /app
-
 EXPOSE 8080
+
 
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
@@ -11,8 +11,9 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 COPY ["NeuroChecker.Backend.Service.Neuro/NeuroChecker.Backend.Service.Neuro.csproj", "NeuroChecker.Backend.Service.Neuro/"]
-RUN dotnet restore "NeuroChecker.Backend.Service.Neuro/NeuroChecker.Backend.Service.Neuro.csproj"
+COPY ["NeuroChecker.Backend.Identity.Permission/NeuroChecker.Backend.Identity.Permission.csproj", "NeuroChecker.Backend.Identity.Permission/"]
 
+RUN dotnet restore "NeuroChecker.Backend.Service.Neuro/NeuroChecker.Backend.Service.Neuro.csproj"
 COPY . .
 
 WORKDIR "/src/NeuroChecker.Backend.Service.Neuro"
@@ -24,7 +25,6 @@ ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./NeuroChecker.Backend.Service.Neuro.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
-
 WORKDIR /app
 
 COPY --from=publish /app/publish .
